@@ -63,5 +63,5 @@ def process_image():
         if os.path.exists(sharpened_image_path):
             os.remove(sharpened_image_path)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
