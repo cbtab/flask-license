@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from ultralytics import YOLO
 from PIL import Image, ImageFilter
 import easyocr
@@ -7,7 +8,7 @@ import base64
 import os
 
 app = Flask(__name__)
-
+CORS(app)
 model = YOLO('best.pt')
 
 @app.route('/', methods=['GET'])
@@ -64,4 +65,4 @@ def process_image():
             os.remove(sharpened_image_path)
 
 # if __name__ == '__main__':
-#     app.run(debug=True)
+#     app.run()
