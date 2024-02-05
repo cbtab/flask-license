@@ -10,6 +10,10 @@ app = Flask(__name__)
 
 model = YOLO('best.pt')
 
+@app.route('/', methods=['GET'])
+def hello_world():
+    return "server is running"
+
 @app.route('/process_image', methods=['POST'])
 def process_image():
     try:
