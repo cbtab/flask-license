@@ -1,9 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from PIL import Image, ImageFilter
+from PIL import Image
 import easyocr
-import io
-import base64
 
 app = Flask(__name__)
 CORS(app)
@@ -15,13 +13,12 @@ def hello_world():
 @app.route('/process_image', methods=['POST'])
 def process_image():
     try:
-        if 'image' not in request.json:
+        if 'image' not in request.files:
             return jsonify({"error": "No image provided"}), 400
 
-        base64_image = request.json['image']
-        image_bytes = base64.b64decode(base64_image)
+        uploaded_image = request.files['image']
 
-        with Image.open(io.BytesIO(image_bytes)) as image:
+        with Image.open(uploaded_image) as image:
             image_format = image.format.lower() if image.format else None
 
             reader = easyocr.Reader(['th'])
@@ -34,3 +31,6 @@ def process_image():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)
