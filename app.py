@@ -20,16 +20,17 @@ def process_image():
 
         base64_image = request.json['image']
         image_bytes = base64.b64decode(base64_image)
-        image = Image.open(io.BytesIO(image_bytes))
 
-        image_format = image.format.lower() if image.format else None
+        with Image.open(io.BytesIO(image_bytes)) as image:
+            image_format = image.format.lower() if image.format else None
 
-        reader = easyocr.Reader(['th'])
-        ocr_result = reader.readtext(image)
+            reader = easyocr.Reader(['th'])
+            ocr_result = reader.readtext(image)
 
-        recognized_texts = [text_info[1] for text_info in ocr_result]
-        print('Recognized texts:', recognized_texts)
-        return jsonify({"recognized_texts": recognized_texts, "image_format": image_format})
+            recognized_texts = [text_info[1] for text_info in ocr_result]
+            print('Recognized texts:', recognized_texts)
+
+        return jsonify({"recognized_texts": recognized_texts, "image_format": image_format, "server_message": "Image processed successfully"})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
